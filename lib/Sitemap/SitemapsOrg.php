@@ -1377,6 +1377,15 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 	}
 
 /**
+ * Gets dom document.
+ *
+ * @return DomDocument
+ */
+	public function getDomDocument() {
+		return $this->_domDocument;
+	}
+
+/**
  * Sets namespaces.
  *
  * @param string $namespaces
