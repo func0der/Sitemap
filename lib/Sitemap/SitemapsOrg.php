@@ -296,12 +296,32 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
   */
  	protected $_debug = false;
 
+/********************************************
+ |
+ ############## Inserting Data ##############
+ 											|
+ *******************************************/
+
  /**
   * Constructor.
   *
   * Basically just calls the self::init() method.
   */
  	public function __construct() {
+ 	}
+
+ /**
+  * Resets the class to start from the beginning with new entries.
+  *
+  * @return SitemapsOrg
+  */
+ 	public function reset() {
+ 		// Unset the entries holding url.
+ 		$this->_entries = array();
+ 		// Unset dom document
+ 		unset($this->_domDocument);
+
+ 		return $this;
  	}
 
 /********************************************
