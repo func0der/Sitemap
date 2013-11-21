@@ -1,6 +1,6 @@
 <?php
 /**
- * Sitemap interface file.
+ * Sitemaps.org sitemap file.
  * 
  * Contains the definition of a Sitemaps.org Sitemap.
  *

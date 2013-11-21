@@ -1,6 +1,6 @@
 <?php
 /**
- * Sitemap interface file.
+ * Google Image Sitemap file.
  * 
  * Contains the definition of a Google Image Sitemap.
  *

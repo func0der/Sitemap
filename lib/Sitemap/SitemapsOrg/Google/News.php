@@ -1,6 +1,6 @@
 <?php
 /**
- * Sitemap interface file.
+ * Google News Sitemap file.
  * 
  * Contains the definition of a Google News Sitemap.
  *

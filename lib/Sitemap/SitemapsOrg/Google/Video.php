@@ -1,6 +1,6 @@
 <?php
 /**
- * Sitemap interface file.
+ * Google Video Sitemap file.
  * 
  * Contains the definition of a Google Video Sitemap.
  *

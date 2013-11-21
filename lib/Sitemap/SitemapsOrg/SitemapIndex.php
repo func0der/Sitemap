@@ -1,7 +1,7 @@
 <?php
 /**
- * Sitemap interface file.
- * 
+ * Sitemaps.org Sitemap Index Sitemap file.
+ *
  * Contains the definition of a Sitemap Index Sitemap.
  *
  * @author Lars Lenecke <incode@func0der.de>
