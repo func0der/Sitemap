@@ -417,7 +417,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			}
 		}
 
-		foreach ($entry as $node => $data) {
+		foreach ($result as $node => $data) {
 			// Check if we have a configuration.
 			if ($this->hasAllowedEntryConfig($node)) {
 				$nodeConfiguration = $this->getAllowedEntryConfig($node);
@@ -510,6 +510,10 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 				}
 
 				$result[$node] = $data;
+			}
+			else {
+				// Unset the node data.
+				unset($result[$node]);
 			}
 		}
 
