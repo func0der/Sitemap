@@ -298,6 +298,13 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  	protected $pingUrl = array();
 
  /**
+  * Validation trigger.
+  *
+  * @var boolean
+  */
+ 	protected $_useValidation = TRUE;
+
+ /**
   * Trigger for debug mode.
   *
   *	Enables for example formatted output.
@@ -306,9 +313,10 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
   */
  	protected $_debug = false;
 
+
 /********************************************
  |
- ############## Inserting Data ##############
+ ############# General Methods ##############
  											|
  *******************************************/
 
@@ -333,6 +341,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 
  		return $this;
  	}
+
 
 /********************************************
  |
@@ -464,7 +473,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 				// Normal string.
 				else {
 					// Validation.
-					if (isset($nodeConfiguration['validationCallback'])) {
+					if ($this->getUseValidation() && isset($nodeConfiguration['validationCallback'])) {
 						$validationCallback = $nodeConfiguration['validationCallback'];
 
 						// Define parameters for validationCallback.
@@ -1962,6 +1971,51 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		}
 
 		return FALSE;
+	}
+
+/**
+ * Sets trigger for validation.
+ *
+ * @param boolean $useValidation
+ *	The trigger value.
+ *
+ * @return SitemapsOrg
+ */
+	public function setUseValidation($useValidation) {
+		$this->_useValidation = $useValidation;
+
+		return $this;
+	}
+
+/**
+ * Get trigger for validation.
+ *
+ * @return boolean
+ */
+	public function getUseValidation() {
+		return $this->_useValidation;
+	}
+
+/**
+ * Enables validation.
+ *
+ * @return SitemapsOrg
+ */
+	public function enableValidation() {
+		$this->setUseValidation(TRUE);
+
+		return $this;
+	}
+
+/**
+ * Disables validation.
+ *
+ * @return boolean
+ */
+	public function disableValidation() {
+		$this->setUseValidation(FALSE);
+
+		return $this;
 	}
 
 /**
