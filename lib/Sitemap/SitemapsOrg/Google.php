@@ -447,7 +447,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 		$result = strip_tags($result);
 
 		// Encode special chars.
-		$result = htmlentities($string, ENT_COMPAT, $this->getEncoding(), $double_encode);
+		$result = $this->content_encodedText($result, $double_encode);
 
 		return $result;
 	}

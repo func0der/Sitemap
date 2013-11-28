@@ -873,7 +873,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			}
 			// ... or it just has a value for it.
 			else {
-				$node->nodeValue = $nodeValue;
+				$node->nodeValue = $this->content_encodedText($nodeValue, FALSE);
 			}
 		}
 	}
@@ -1119,6 +1119,29 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  ############ Validation Methods ############
  											|
  *******************************************/
+
+/**
+ * Converts string to encoded text.
+ *
+ * Encodes all specials
+ * chars.
+ *
+ * @param string $string
+ *	The string to be cleaned up.
+ * @param boolean $double_encode
+ *	Used for htmlentities() function.
+ *
+ * @param string
+ *	Cleaned up string.
+ */
+	public function content_encodedText($string, $double_encode = true) {
+		$result = $string;
+
+		// Encode special chars.
+		$result = htmlentities($string, ENT_COMPAT, $this->getEncoding(), $double_encode);
+
+		return $result;
+	}
 
 /**
  * Checks if the given string is a valid url.
