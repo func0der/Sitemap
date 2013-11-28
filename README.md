@@ -59,10 +59,6 @@ There some todos in the source code and also some annotations as mentioned above
 
 - Add support for attributes
 
-### Sitemap_SitemapsOrg_SitemapIndex
-
-- Create me
-
 The long term goals of this project are to provide universal support for HTML and XML sitemaps or whatever sitemap format
 there will be in the future.
 
