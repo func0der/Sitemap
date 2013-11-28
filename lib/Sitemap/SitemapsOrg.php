@@ -81,18 +81,6 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 	protected $_entryRootNodeName = 'url';
 
 /**
- * Required entry nodes.
- *
- * {@link http://www.sitemaps.org/protocol.html#mainContent Definition}
- *
- * @var array
- */
-// @XXX: Maybe not needed anymore, due to $this->_allowedEntryNodes?
-	protected $_requiredEntryNodes = array(
-		'loc',
-	);
-
-/**
  * Allowed entry nodes.
  *
  * {@link http://www.sitemaps.org/protocol.html#xmlTagDefinitions Definition}
