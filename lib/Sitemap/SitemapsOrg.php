@@ -293,6 +293,13 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  	protected $_useValidation = TRUE;
 
  /**
+  * Content callback trigger.
+  *
+  * @var boolean
+  */
+	protected $_useContentCallbacks = TRUE;
+
+ /**
   * Trigger for debug mode.
   *
   *	Enables for example formatted output.
@@ -508,7 +515,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 					}
 
 					// Manipulate content.
-					if (isset($nodeConfiguration['contentCallback'])) {
+					if ($this->getUseContentCallbacks() && isset($nodeConfiguration['contentCallback'])) {
 						$contentCallback = $nodeConfiguration['contentCallback'];
 
 						// Define parameters for contentCallback.
@@ -2002,6 +2009,51 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  */
 	public function disableValidation() {
 		$this->setUseValidation(FALSE);
+
+		return $this;
+	}
+
+/**
+ * Sets trigger for content callbacks.
+ *
+ * @param boolean $useContentCallbacks
+ *	The trigger value.
+ *
+ * @return SitemapsOrg
+ */
+	public function setUseContentCallbacks($useContentCallbacks) {
+		$this->_useContentCallbacks = $useContentCallbacks;
+
+		return $this;
+	}
+
+/**
+ * Get trigger for content callbacks.
+ *
+ * @return boolean
+ */
+	public function getUseContentCallbacks() {
+		return $this->_useContentCallbacks;
+	}
+
+/**
+ * Enables content callback.
+ *
+ * @return SitemapsOrg
+ */
+	public function enableContentCallbacks() {
+		$this->setUseContentCallbacks(TRUE);
+
+		return $this;
+	}
+
+/**
+ * Disables content callbacks.
+ *
+ * @return boolean
+ */
+	public function disableContentCallbacks() {
+		$this->setUseContentCallbacks(FALSE);
 
 		return $this;
 	}

@@ -47,7 +47,6 @@ There some todos in the source code and also some annotations as mentioned above
 ### SitemapInterface
 
 - Tests for the sitemap to make it easiert to test new features.
-- Add validation and content callback "on/off" switch methods.
 - Add possibility to provide other entries data to make conditional validation possible.
 - Some more abstraction is needed in the interface.
 
