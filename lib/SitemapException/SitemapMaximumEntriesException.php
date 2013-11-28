@@ -11,4 +11,4 @@
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . '../SitemapException.php';
 
-class SitemapMaximumEntriesException extends Exception {}
+class SitemapMaximumEntriesException extends SitemapException {}

@@ -11,4 +11,4 @@
 
 require_once __DIR__ . DIRECTORY_SEPARATOR . '../SitemapException.php';
 
-class SitemapInvalidCallbackException extends Exception {}
+class SitemapInvalidCallbackException extends SitemapException {}
