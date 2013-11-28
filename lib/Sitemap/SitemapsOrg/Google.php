@@ -51,18 +51,24 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 					'loc' => array(
 						'contentCallback' => 'content_url',
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => 'image',
 						'required' => TRUE,
 						'validationCallback' => 'validation_url',
 					),
 					'caption' => array(
+						'prefix' => TRUE,
 					),
 					'geo_location' => array(
+						'prefix' => TRUE,
 					),
 					'title' => array(
+						'prefix' => TRUE,
 					),
 					'license' => array(
+						'prefix' => TRUE,
 					),
 				),
+				'prefix' => 'image',
 			),
 		);
 
@@ -90,18 +96,21 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 					'thumbnail_loc' => array(
 						'contentCallback' => array('content_url'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'required' => TRUE,
 						'validationCallback' => array('validation_video_thumbnail'),
 					),
 					'title' => array(
 						'contentCallback' => array('content_htmlEncodedText'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'required' => TRUE,
 						'validationCallback' => array('validation_maxLength', 50),
 					),
 					'description' => array(
 						'contentCallback' => array('content_htmlEncodedText'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'required' => TRUE,
 						'validationCallback' => array('validation_maxLength', 2048),
 					),
@@ -111,6 +120,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 					'content_loc' => array(
 						'contentCallback' => array('content_url'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'required' => TRUE,
 						'validationCallback' => array('validate_url'),
 					),
@@ -120,32 +130,39 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 					'player_loc' => array(
 						'contentCallback' => array('content_url'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'required' => TRUE,
 						'validationCallback' => array('validate_url'),
 					),
 					'duration' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_between', 0, 28800, TRUE),
 					),
 					'expiration_date' => array(
 						'contentCallback' => array('content_date'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_date'),
 					),
 					'rating' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_between', 0, 5, TRUE),
 					),
 					'view_count' => array(
+						'prefix' => TRUE,
 					),
 					'publication_date' => array(
 						'contentCallback' => array('content_date'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_date'),
 					),
 					'family_friendly' => array(
 						'contentCallback' => array('content_boolean'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_boolean'),
 					),
 					// @XXX:	Similar problem as with player/content_loc.
@@ -156,20 +173,24 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 					//				in the current configuration anyway. So we can output at least several ones
 					//				and also validate their number.
 					'tag' => array(
+						'prefix' => TRUE,
 					),
 					'category' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_maxLength', 256),
 					),
 					// @XXX:	It should be considered accepting arrays here, instead of only a list
 					//			seperated by spaces.
 					'restriction' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_ISO3166'),
 					),
 					'gallery_loc' => array(
 						'contentCallback' => array('content_url'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validate_url'),
 					),
 					// @XXX:	Currently NOT! supported, due to the lack of attribute support.
@@ -182,20 +203,25 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 					'requires_subscription' => array(
 						'contentCallback' => array('content_boolean'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_boolean'),
 					),
 					'uploader' => array(
+						'prefix' => TRUE,
 					),
 					'platform' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_platform'),
 					),
 					'live' => array(
 						'contentCallback' => array('content_boolean'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => array('validation_boolean'),
 					),
 				),
+				'prefix' => 'video',
 			),
 		);
 

@@ -115,10 +115,13 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *		Child nodes to be accepted under this node.
  *		The same options are available for child nodes
  *		as for parent nodes.
+ *		Additional there is an index called "prefix". If set to
+ *		"TRUE" or to a string, node names get prefixed by parent node name
+ *		or the given string. If not set or "FALSE", node names are
+ *		not prefixed.
  *		If not empty, validation and content callbacks do not
  *		apply, nor is any content of the node rendered.
- *		If not set, no validation or else will be applied
- *		on possible children.
+ *		If not set, possible children will not be rendered.
  *
  *	contentCallback (optional)
  *		Is called to manipulate the content of the given value. For example
@@ -194,6 +197,13 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  * @var array
  */
  	protected $_entries = array();
+
+/**
+ * Holding the node names used for node name generation.
+ *
+ * @var array
+ */
+	protected $_parentNodeNames = array();
 
  /**
   * Change frequency: always
@@ -396,35 +406,60 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *	The (manipulated) entry.
  */
 	protected function _progressEntryData($entry, $runTimeConfiguration = NULL) {
-		$result = $entry;
+		$result = array();
+
+		// Set allowed entry nodes configuration if run time configuration is given.
+		if (!is_null($runTimeConfiguration)) {
+			$oldAllowedEntryNodes = $this->getAllowedEntryNodes();
+			$this->setAllowedEntryNodes($runTimeConfiguration);
+		}
+
 		// Get allowed entry nodes.
-		$allowedEntryNodes = (
-			$runTimeConfiguration ?
-			$runTimeConfiguration :
-			$this->getAllowedEntryNodes()
-		);
+		$allowedEntryNodes = $this->getAllowedEntryNodes();
 
 		// Check for missing required data.
 		foreach ($allowedEntryNodes as $node => $configuration) {
+			
 			if (
 				// Configuration is present.
 				isset($configuration['required']) &&
 				$configuration['required'] === TRUE &&
 				// Node is not found in entry data or empty.
-				(!isset($result[$node]) || empty($result[$node]))
+				(!isset($entry[$node]) || empty($entry[$node]))
 			) {
 				throw new SitemapInvalidParameterException('Required node ' . $node . ' is missing in your entry.');
 			}
 		}
 
-		foreach ($result as $node => $data) {
+		foreach ($entry as $node => $data) {
 			// Check if we have a configuration.
 			if ($this->hasAllowedEntryConfig($node)) {
+				// Add node to parent node names.
+				$this->_addParentNodeName($node);
+
 				$nodeConfiguration = $this->getAllowedEntryConfig($node);
 
 				// Check for children.
 				if (is_array($data)) {
-					$data = $this->_progressEntryData($data, $nodeConfiguration[self::ALLOWED_ENTRY_CHILDREN_INDEX]);
+					// We need to recreated the whole array to catch sub nodes and sub node collections.
+					$sub_node_collections = array();
+					foreach ($data as $index => $data_items) {
+						// If this is a collection of sub nodes it is something like images or videos.
+						// Since XML nodes can not be an integer, this should do it.
+						if (is_int($index)) {
+							$sub_node_collections[$index] = $this->_progressEntryData($data[$index], $nodeConfiguration[self::ALLOWED_ENTRY_CHILDREN_INDEX]);
+							// Unset this index, so we can process $data later on.
+							unset($data[$index]);
+						}
+					}
+
+					// Process left over data, if any.
+					if (!empty($data)) {
+						$data = $this->_progressEntryData($data, $nodeConfiguration[self::ALLOWED_ENTRY_CHILDREN_INDEX]);
+					}
+
+					// Merge data back together.
+					$data = array_merge($sub_node_collections, $data);
 				}
 				// Normal string.
 				else {
@@ -509,12 +544,20 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 					}
 				}
 
-				$result[$node] = $data;
+				// Generate node name.
+				$nodeName = $this->_generateNodeName($node, $nodeConfiguration);
+
+				// Save the result.
+				$result[$nodeName] = $data;
+
+				// Remove last entry from last parent nodes.
+				$this->_removeLastParentNodeName();
 			}
-			else {
-				// Unset the node data.
-				unset($result[$node]);
-			}
+		}
+
+		// Reset allowed entry configuration.
+		if (!is_null($runTimeConfiguration) && isset($oldAllowedEntryNodes)) {
+			$this->setAllowedEntryNodes($oldAllowedEntryNodes);
 		}
 
 		return $result;
@@ -691,6 +734,38 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		return $result;
 	}
 
+/**
+ * Generate a node name.
+ *
+ * Generates a node name based on the given configuration and
+ * the $this->_parentNodeName array.
+ *
+ * @param string $nodeName
+ *	The name of the node to generade a name for.
+ * @param array $configuration
+ *	The allowed entry configuration of the current node.
+ *
+ * @return string
+ *	The generated node name.
+ */
+	protected function _generateNodeName($nodeName, $nodeConfiguration) {
+		// Initiate result.
+		$result = $nodeName;
+
+		if (isset($nodeConfiguration['prefix'])) {
+			$prefix = $nodeConfiguration['prefix'];
+
+			if (is_bool($prefix) && $prefix === TRUE) {
+				$result = implode(':', $this->_getParentNodeNames());
+			}
+			elseif (is_string($prefix)) {
+				$result = $prefix . ':' . $result;
+			}
+		}
+
+		return $result;
+	}
+
 /********************************************
  |
  ############# Outputting Data ##############
@@ -762,35 +837,40 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *	The element to render nodes into.
  * @param array $node
  *	The nodes to create.
- * @param string $prefix
- *	If set node names are prefixed with it.
  */
-	protected function _renderNode ($rootNode, $nodes, $prefix = NULL) {
+	protected function _renderNode ($rootNode, $nodes) {
 		// Render nodes.
 		foreach($nodes as $nodeName => $nodeValue) {
 			// Check for child nodes.
 			$hasChildNodes = is_array($nodeValue);
 
-			if (!is_null($prefix)) {
-				$nodeName = $prefix . ':' . $nodeName;
+			// This is a sub node collection.
+			// This means, we create multiple nodes of the $rootNode
+			// in the $rootNode->parentNode.
+			if (is_int($nodeName) && $hasChildNodes) {
+				// Create new node from the root node name.
+				$node = $this->_domDocument->createElement($rootNode->nodeName);
+
+				// Append node to root parent node.
+				$rootNode->parentNode->appendChild($node);
 			}
-			elseif ($hasChildNodes) {
-				$originalNodeName = $nodeName;
-				$nodeName = $nodeName . ':' . $nodeName;
+			// We have a normale sub node situation here.
+			else {
+				// Create node for data.
+				$node = $this->_domDocument->createElement($nodeName);
+
+				// Append node to root node.
+				$rootNode->appendChild($node);
 			}
 
-			// Create node for data.
-			$node = $this->_domDocument->createElement($nodeName);
-
+			// This one has child nodes and needs to append those.
 			if ($hasChildNodes) {
-				$this->_renderNode($node, $nodeValue, $originalNodeName);
+				$this->_renderNode($node, $nodeValue);
 			}
+			// ... or it just has a value for it.
 			else {
 				$node->nodeValue = $nodeValue;
 			}
-
-			// Append node to root node.
-			$rootNode->appendChild($node);
 		}
 	}
 
@@ -1745,6 +1825,54 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  */
 	public function getEntries() {
 		return $this->_entries;
+	}
+
+/**
+ * Gets the currently saved parent node names.
+ *
+ * @return array
+ */
+	protected function _getParentNodeNames() {
+		return $this->_parentNodeNames;
+	}
+
+/**
+ * Adds an entry to the current parent node names.
+ *
+ * @param string $nodeName
+ *	The nodename to be added to parent node names.
+ *
+ * @return SitemapsOrg
+ */
+	public function _addParentNodeName($nodeName) {
+		array_push(
+			$this->_parentNodeNames,
+			$nodeName
+		);
+
+		return $this;
+	}
+
+/**
+ * Removes the last entry from the current parent node names.
+ *
+ * @return SitemapsOrg
+ */
+	public function _removeLastParentNodeName() {
+		array_pop($this->_parentNodeNames);
+
+		return $this;
+	}
+
+/**
+ * Resets the parent node names array.
+ *
+ * @return SitemapsOrg
+ */
+	public function _resetParentNodeNames() {
+		$this->_parentNodeNames = array();
+
+		return $this;
 	}
 
 /**

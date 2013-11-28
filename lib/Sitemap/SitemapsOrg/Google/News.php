@@ -43,39 +43,50 @@ class Sitemap_SitemapsOrg_Google_News extends Sitemap_SitemapsOrg_Google{
 						self::ALLOWED_ENTRY_CHILDREN_INDEX => array(
 							'name' => array(
 								'fallbackValue' => self::VALIDATION_EXCEPTION,
+								'prefix' => 'news',
 								'required' => TRUE,
 								'validationCallback' => 'validation_publicationName',
 							),
 							'language' => array(
 								'fallbackValue' => self::VALIDATION_EXCEPTION,
+								'prefix' => 'news',
 								'required' => TRUE,
 								'validationCallback' => 'validation_ISO639',
 							),
 						),
+						'prefix' => TRUE,
 					),
 					'access' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => 'validation_accessCondition',
 					),
 					'genres' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'validationCallback' => 'validation_genres',
 					),
 					'publication_date' => array(
 						'contentCallback' => array('content_date'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
+						'prefix' => TRUE,
 						'required' => TRUE,
 						'validationCallback' => array('validation_date'),
 					),
 					'title' => array(
+						'prefix' => TRUE,
 					),
 					'geo_location' => array(
+						'prefix' => TRUE,
 					),
 					'keywords' => array(
+						'prefix' => TRUE,
 					),
 					'stock_tickers' => array(
+						'prefix' => TRUE,
 					),
 				),
+				'prefix' => 'news',
 			),
 		);
 
