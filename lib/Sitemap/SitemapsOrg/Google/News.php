@@ -26,6 +26,9 @@ class Sitemap_SitemapsOrg_Google_News extends Sitemap_SitemapsOrg_Google{
 		// Call parent.
 		parent::__construct();
 
+		// Use images.
+		self::useImages();
+
 		// Add namespace.
 		$this->addNamespace(
 			'http://www.google.com/schemas/sitemap-news/0.9',
@@ -39,23 +42,23 @@ class Sitemap_SitemapsOrg_Google_News extends Sitemap_SitemapsOrg_Google{
 					'publication' => array(
 						self::ALLOWED_ENTRY_CHILDREN_INDEX => array(
 							'name' => array(
-								'fallbackValue' => self::VALIDATION_EXCETION,
+								'fallbackValue' => self::VALIDATION_EXCEPTION,
 								'required' => TRUE,
 								'validationCallback' => 'validation_publicationName',
 							),
 							'language' => array(
-								'fallbackValue' => self::VALIDATION_EXCETION,
+								'fallbackValue' => self::VALIDATION_EXCEPTION,
 								'required' => TRUE,
 								'validationCallback' => 'validation_ISO639',
 							),
 						),
 					),
 					'access' => array(
-						'fallbackValue' => self::VALIDATION_EXCETION,
+						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'validationCallback' => 'validation_accessCondition',
 					),
 					'genres' => array(
-						'fallbackValue' => self::VALIDATION_EXCETION,
+						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'validationCallback' => 'validation_genres',
 					),
 					'publication_date' => array(
@@ -126,7 +129,7 @@ class Sitemap_SitemapsOrg_Google_News extends Sitemap_SitemapsOrg_Google{
 		// Code is invalid until otherwise proven.
 		$result = FALSE;
 
-		if (preg_match('/^(a-z{2}|a-z{3}|zh-(cw|tw))$/i', $code) === 1) {
+		if (preg_match('/^([a-z]{2}|[a-z]{3}|zh-(cw|tw))$/i', $code) === 1) {
 			$result = TRUE;
 		}
 
