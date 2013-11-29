@@ -86,7 +86,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 		// Add namespace.
 		$this->addNamespace(
 			'http://www.google.com/schemas/sitemap-video/1.1',
-			'image'
+			'video'
 		);
 
 		// Add allowed entry nodes.
