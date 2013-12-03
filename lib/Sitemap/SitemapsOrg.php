@@ -1412,7 +1412,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		else {
 		*/
 		// $datetime is a timestamp if it only conssits of digits.
-		if (is_numeric($result) && is_int($result)) {
+		if (is_numeric($result) || is_int($result)) {
 			$result = '@' . intval($datetime);
 		}
 		else{
