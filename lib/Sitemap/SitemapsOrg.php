@@ -1386,6 +1386,9 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *
  * @param string $datetime
  *	The date to manipulate.
+ *	If $datetime only consists of digits it will be assumed
+ *	that it is a unix timestamp.
+ *	Else it is a datetime string.
  *
  * @return string
  *	The manipulated date.
@@ -1408,17 +1411,17 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		}
 		else {
 		*/
-		// Get the unix timestamp.
-		$result = strtotime($result);
-
-		// We have already a timestamp in $datetime.
-		if($result === FALSE) {
-			$result = '@' . $datetime;
+		// $datetime is a timestamp if it only conssits of digits.
+		if (is_numeric($result) && is_int($result)) {
+			$result = '@' . intval($datetime);
+		}
+		else{
+			// Get the unix timestamp.
+			$result = strtotime($result);
 		}
 
 		$result = new DateTime(
-			$result,
-			new DateTimeZone('Europe/London')
+			$result
 		);
 		
 		$result = $result->format(DateTime::W3C);
