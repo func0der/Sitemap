@@ -378,7 +378,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 		// We set this to true at first, because it easier to use in loops.
 		$result = TRUE;
 
-		$value = implode(' ', $value);
+		$value = explode(' ', $value);
 
 		foreach ($value AS $code) {
 			if (preg_match('/^(a-z{2}|a-z{3}|\d{3})$/i', $code) !== 1) {
