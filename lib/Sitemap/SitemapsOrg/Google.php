@@ -105,7 +105,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'prefix' => TRUE,
 						'required' => TRUE,
-						'validationCallback' => array('validation_maxLength', 50),
+						'validationCallback' => array('validation_maxLength', 100),
 					),
 					'description' => array(
 						'contentCallback' => array('content_htmlEncodedText'),
@@ -122,7 +122,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'prefix' => TRUE,
 						'required' => TRUE,
-						'validationCallback' => array('validate_url'),
+						'validationCallback' => array('validation_url'),
 					),
 					// @XXX:	Since it is currently not possible to validate depending on 
 					//			other values, use either self::useContentLoc() or
@@ -132,7 +132,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'prefix' => TRUE,
 						'required' => TRUE,
-						'validationCallback' => array('validate_url'),
+						'validationCallback' => array('validation_url'),
 					),
 					'duration' => array(
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
@@ -191,7 +191,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 						'contentCallback' => array('content_url'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'prefix' => TRUE,
-						'validationCallback' => array('validate_url'),
+						'validationCallback' => array('validation_url'),
 					),
 					// @XXX:	Currently NOT! supported, due to the lack of attribute support.
 					/*

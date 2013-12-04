@@ -1182,7 +1182,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  * @return boolean
  */
 	public function validation_url($url) {
-		return filter_var($url, FILTER_VALIDATE_URL);
+		return (filter_var($url, FILTER_VALIDATE_URL) !== FALSE);
 	}
 
 /**
