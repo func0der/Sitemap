@@ -1128,17 +1128,36 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *
  * @param string $string
  *	The string to be cleaned up.
- * @param boolean $double_encode
- *	Used for htmlentities() function.
  *
  * @param string
  *	Cleaned up string.
  */
-	public function content_encodedText($string, $double_encode = true) {
+	public function content_encodedText($string) {
 		$result = $string;
 
-		// Encode special chars.
-		$result = htmlentities($string, ENT_COMPAT, $this->getEncoding(), $double_encode);
+
+		// Taken from here: http://us2.php.net/manual/en/function.htmlentities.php#99984
+		// First we encode html characters that are also invalid in xml
+		$string = htmlentities($string, ENT_COMPAT, $this->getEncoding(), false);
+
+		// XML character entity array from Wiki
+		// Note: &apos; is useless in UTF-8 or in UTF-16 (@XXX: who knows why?)
+		$arr_xml_special_char = array("&quot;","&amp;","&apos;","&lt;","&gt;");
+
+		// Building the regex string to exclude all strings with xml special char
+		$arr_xml_special_char_regex = "(?";
+		foreach($arr_xml_special_char as $key => $value){
+			$arr_xml_special_char_regex .= "(?!$value)";
+		}
+		$arr_xml_special_char_regex .= ")";
+
+		// Scan the array for &something_not_xml; syntax
+		$pattern = '/' . $arr_xml_special_char_regex . '&([a-zA-Z0-9]+;)/';
+
+		// Replace the &something_not_xml; with &amp;something_not_xml;
+		$replacement = '&amp;${1}';
+
+		$result = preg_replace($pattern, $replacement, $string);
 
 		return $result;
 	}

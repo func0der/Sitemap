@@ -434,20 +434,18 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
  *
  * @param string $string
  *	The string to be cleaned up.
- * @param boolean $double_encode
- *	Used for htmlentities() function.
  *
  * @param string
  *	Cleaned up string.
  */
-	public function content_htmlEncodedText($string, $double_encode = true) {
+	public function content_htmlEncodedText($string) {
 		$result = $string;
 
 		// Remove html tags.
 		$result = strip_tags($result);
 
 		// Encode special chars.
-		$result = $this->content_encodedText($result, $double_encode);
+		$result = $this->content_encodedText($result);
 
 		return $result;
 	}
