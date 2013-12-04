@@ -791,7 +791,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 
 		foreach($entries as $entry) {
 			// Create a root node for the entry.
-			$entryNode = $this->_domDocument->createElement($this->_entryRootNodeName);
+			$entryNode = $this->getDomDocument()->createElement($this->_entryRootNodeName);
 
 			// Create all the nodes for the entry.
 			$this->_renderNode($entryNode, $entry);
@@ -800,7 +800,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			$rootNode->appendChild($entryNode);
 		}
 
-		return $this->_domDocument->saveXML();
+		return $this->getDomDocument()->saveXML();
 	}
 
 /**
@@ -811,27 +811,27 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		$this->_domDocument = new DomDocument($this->getXmlVersion(), $this->getEncoding());
 
 		// Remove unnecessary whitespaces.
-		$this->_domDocument->preserveWhiteSpace = false;
+		$this->getDomDocument()->preserveWhiteSpace = false;
 
 		if ($this->getDebug()) {
-			$this->_domDocument->formatOutput = true;
+			$this->getDomDocument()->formatOutput = true;
 		}
 
 		// Include stylesheet.
 		if($this->getStyleSheet()) {
-			$styleSheetNode = $this->_domDocument->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $this->getStyleSheet() . '"');
+			$styleSheetNode = $this->getDomDocument()->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $this->getStyleSheet() . '"');
 
-			$this->_domDocument->appendChild($styleSheetNode);
+			$this->getDomDocument()->appendChild($styleSheetNode);
 		}
 
 		// Add root node.
-		$rootNode = $this->_domDocument->createElement($this->_rootNodeName);
+		$rootNode = $this->getDomDocument()->createElement($this->_rootNodeName);
 
 		// Apply additional namespaces if needed.
 		$this->_applyNamespaces($rootNode);
 
 		// Append root node to main document.
-		$this->_domDocument->appendChild($rootNode);
+		$this->getDomDocument()->appendChild($rootNode);
 	}
 
 /**
@@ -848,12 +848,15 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			// Check for child nodes.
 			$hasChildNodes = is_array($nodeValue);
 
+			// Check for sub node collection.
+			$isSubNodeCollection = is_int($nodeName) && $hasChildNodes;
+
 			// This is a sub node collection.
 			// This means, we create multiple nodes of the $rootNode
 			// in the $rootNode->parentNode.
-			if (is_int($nodeName) && $hasChildNodes) {
+			if ($isSubNodeCollection) {
 				// Create new node from the root node name.
-				$node = $this->_domDocument->createElement($rootNode->nodeName);
+				$node = $this->getDomDocument()->createElement($rootNode->nodeName);
 
 				// Append node to root parent node.
 				$rootNode->parentNode->appendChild($node);
@@ -861,7 +864,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			// We have a normale sub node situation here.
 			else {
 				// Create node for data.
-				$node = $this->_domDocument->createElement($nodeName);
+				$node = $this->getDomDocument()->createElement($nodeName);
 
 				// Append node to root node.
 				$rootNode->appendChild($node);
@@ -875,6 +878,14 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			else {
 				$node->nodeValue = $this->content_encodedText($nodeValue);
 			}
+		}
+
+		// Remove subnode collection caused empty node.
+		// @XXX:	If we have a mix of subnode collection and real subnodes
+		//			this may cause problems. If you want to see the original
+		//			problem, just comment the next line out.
+		if ($isSubNodeCollection) {
+			$rootNode->parentNode->removeChild($rootNode);
 		}
 	}
 
@@ -906,7 +917,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  * @return DomNode
  */
 	protected function _getRootNode(){
-		$result = $this->_domDocument->getElementsByTagName($this->_rootNodeName);
+		$result = $this->getDomDocument()->getElementsByTagName($this->_rootNodeName);
 
 		$result = $result->item(0);
 
