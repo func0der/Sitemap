@@ -873,7 +873,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			}
 			// ... or it just has a value for it.
 			else {
-				$node->nodeValue = $this->content_encodedText($nodeValue, FALSE);
+				$node->nodeValue = $this->content_encodedText($nodeValue);
 			}
 		}
 	}
