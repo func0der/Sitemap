@@ -276,23 +276,34 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
  * @return boolean
  */
 	public function validation_video_thumbnail($url) {
+		// @XXX: See below.
+		return TRUE;
 		$result = TRUE;
 
 		// Check for a valid url.
 		$result = $this->validation_url($url);
 
 		if ($result && ini_get('allow_url_fopen') === "1") {
-			$imageSize = getimagesize($url);
+			// @XXX:	This function takes about 8 seconds for ONE call.
+			//			In very big sitemaps this is not practicle.
+			//			Any solutions?
+			$imageSize = @getimagesize($url);
 
-			list($width, $height) = $imageSize;
+			// If image size was successfull.
+			if ($imageSize) {
+				list($width, $height) = $imageSize;
 
-			if (
-				// Invalid width.
-				($width < 160 || $width > 1920) ||
-				($height < 90 || $height > 1080)
-			)
-			{
-				$result = TRUE;
+				if (
+					// Invalid width.
+					($width < 160 || $width > 1920) ||
+					($height < 90 || $height > 1080)
+				)
+				{
+					$result = TRUE;
+				}
+			}
+			else {
+				$result = FALSE;
 			}
 		}
 		else {
