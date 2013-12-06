@@ -277,9 +277,9 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
  * @return boolean
  */
 	public function validation_video_thumbnail($url) {
-		// @XXX: See below.
-		return TRUE;
 		$result = TRUE;
+		// @XXX: See below.
+		return $result;
 
 		// Check for a valid url.
 		$result = $this->validation_url($url);
