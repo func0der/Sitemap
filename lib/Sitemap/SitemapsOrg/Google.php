@@ -109,6 +109,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 						'validationCallback' => array('validation_maxLength', 100),
 					),
 					'description' => array(
+						'cData' => TRUE,
 						'contentCallback' => array('content_htmlEncodedText'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'prefix' => TRUE,
