@@ -332,6 +332,9 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
   * Basically just calls the self::init() method.
   */
  	public function __construct() {
+ 		if (!class_exists('DOMDocument')) {
+ 			throw new Exception('DOMDocument is needed to use this class.');
+ 		}
  	}
 
  /**
@@ -828,7 +831,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  */
 	protected function _initiateRender() {
 		// Initiate DomDocument.
-		$this->_domDocument = new DomDocument($this->getXmlVersion(), $this->getEncoding());
+		$this->_domDocument = new DOMDocument($this->getXmlVersion(), $this->getEncoding());
 
 		// Remove unnecessary whitespaces.
 		$this->getDomDocument()->preserveWhiteSpace = false;
