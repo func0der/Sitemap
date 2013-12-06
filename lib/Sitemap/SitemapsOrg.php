@@ -1166,10 +1166,9 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 	public function content_encodedText($string) {
 		$result = $string;
 
-
 		// Taken from here: http://us2.php.net/manual/en/function.htmlentities.php#99984
 		// First we encode html characters that are also invalid in xml
-		$string = htmlentities($string, ENT_COMPAT, $this->getEncoding(), false);
+		$result = htmlentities($result, ENT_COMPAT, $this->getEncoding(), false);
 
 		// XML character entity array from Wiki
 		// Note: &apos; is useless in UTF-8 or in UTF-16 (@XXX: who knows why?)
@@ -1188,7 +1187,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		// Replace the &something_not_xml; with &amp;something_not_xml;
 		$replacement = '&amp;${1}';
 
-		$result = preg_replace($pattern, $replacement, $string);
+		$result = preg_replace($pattern, $replacement, $result);
 
 		return $result;
 	}
