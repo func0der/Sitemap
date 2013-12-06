@@ -332,9 +332,9 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
   * Basically just calls the self::init() method.
   */
  	public function __construct() {
- 		if (!class_exists('DOMDocument')) {
- 			throw new Exception('DOMDocument is needed to use this class.');
- 		}
+		if (!class_exists('DOMDocument')) {
+			throw new Exception('DOMDocument is needed to use this class.');
+		}
  	}
 
  /**
