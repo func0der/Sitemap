@@ -91,8 +91,10 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *			self::ALLOWED_ENTRY_CHILDREN_INDEX => array(
  *				[NODENAME] => ...
  *			),
+ *			'cData' => TRUE|FALSE,
  *			'contentCallback' => 'nameOfContentManipulateMethod',
  *			'fallbackValue' => ('someValue' || self::VALIDATION_EXCEPTION),
+ *			'prefix' => (TRUE || 'someValue'),
  *			'required' => TRUE|FALSE,
  *			'validationCallback' => 'nameOfValidationMethod',
  *		),
@@ -110,6 +112,10 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *		If not empty, validation and content callbacks do not
  *		apply, nor is any content of the node rendered.
  *		If not set, possible children will not be rendered.
+ *
+ *	cData (optional)
+ *		If is set to TRUE, data will be wrapped in CDATA.
+ *		If not SET or FALSE, data will be escaped for XML.
  *
  *	contentCallback (optional)
  *		Is called to manipulate the content of the given value. For example
@@ -130,6 +136,11 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  *		fails. In case the value is the value of self::VALIDATION_EXCEPTION
  *		the class throws a SitemapValidationException.
  *		Needs to be set if validationCallback is set.
+ *
+ *	prefix (optional)
+ *		If set to TRUE, the child node will be prefixed with parent node.
+ *		If set to some string, the node will be prefix with this string.
+ *		If not set, the node will not be prefixed at all.
  *
  *	required (optional)
  *		If set to TRUE the node is required.
@@ -546,6 +557,15 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 							)
 						);
 					}
+
+					// Check if content should be wrapped in cData or
+					// should just be escaped for XML.
+					if (isset($nodeConfiguration['cData']) && $nodeConfiguration['cData'] === TRUE) {
+						$data = '<![CDATA[' . $data . ']]>';
+					}
+					else {
+						$data = $this->content_encodedText($data);
+					}
 				}
 
 				// Generate node name.
@@ -876,7 +896,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			}
 			// ... or it just has a value for it.
 			else {
-				$node->nodeValue = $this->content_encodedText($nodeValue);
+				$node->nodeValue = $nodeValue;
 			}
 		}
 
