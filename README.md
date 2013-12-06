@@ -54,6 +54,7 @@ There some todos in the source code and also some annotations as mentioned above
 
 - Calculation of estimated filesize so the given limits can be maintained.
 - Consider! automatic output of multiple files if limits are reached.
+- Consider! Validation callback fallback value callbacks e.g. for trimming titles.
 
 ### Sitemap_SitemapsOrg_Google
 
