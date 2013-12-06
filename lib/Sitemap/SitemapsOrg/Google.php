@@ -101,6 +101,7 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 						'validationCallback' => array('validation_video_thumbnail'),
 					),
 					'title' => array(
+						'cData' => TRUE,
 						'contentCallback' => array('content_htmlEncodedText'),
 						'fallbackValue' => self::VALIDATION_EXCEPTION,
 						'prefix' => TRUE,
@@ -454,9 +455,6 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
 
 		// Remove html tags.
 		$result = strip_tags($result);
-
-		// Encode special chars.
-		$result = $this->content_encodedText($result);
 
 		return $result;
 	}
