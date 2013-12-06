@@ -564,7 +564,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 					// Check if content should be wrapped in cData or
 					// should just be escaped for XML.
 					if (isset($nodeConfiguration['cData']) && $nodeConfiguration['cData'] === TRUE) {
-						$data = '<![CDATA[' . $data . ']]>';
+						$data = new DOMCdataSection($data);
 					}
 					else {
 						$data = $this->content_encodedText($data);
@@ -899,7 +899,14 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			}
 			// ... or it just has a value for it.
 			else {
-				$node->nodeValue = $nodeValue;
+				// Append CData if present.
+				if ($nodeValue instanceof DOMCdataSection) {
+					$node->appendChild($nodeValue);
+				}
+				// Or just insert text as node value.
+				else {
+					$node->nodeValue = $nodeValue;
+				}
 			}
 		}
 
