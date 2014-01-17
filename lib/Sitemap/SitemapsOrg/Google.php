@@ -253,11 +253,11 @@ class Sitemap_SitemapsOrg_Google extends Sitemap_SitemapsOrg{
  * @return Sitemap_SitemapsOrg_Google
  */
 	public function usePlayerLoc() {
-		$playerLoc = $this->getAllowedEntryConfig(array('video', 'content_loc'));
+		$contentLoc = $this->getAllowedEntryConfig(array('video', 'content_loc'));
 
-		$playerLoc['required'] = FALSE;
+		$contentLoc['required'] = FALSE;
 
-		$this->addAllowedEntryNode(array('video', 'content_loc'), $playerLoc);
+		$this->addAllowedEntryNode(array('video', 'content_loc'), $contentLoc);
 
 		return $this;
 	}
