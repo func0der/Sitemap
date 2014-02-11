@@ -1917,6 +1917,17 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 	}
 
 /**
+ * Checks if the entries array is empty.
+ *
+ * @return bool
+ */
+	public function hasEntries() {
+		$entries = $this->getEntries();
+
+		return !empty($entries);
+	}
+
+/**
  * Gets the currently saved parent node names.
  *
  * @return array
