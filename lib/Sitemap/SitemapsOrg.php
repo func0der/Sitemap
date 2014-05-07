@@ -1,7 +1,7 @@
 <?php
 /**
  * Sitemaps.org sitemap file.
- * 
+ *
  * Contains the definition of a Sitemaps.org Sitemap.
  *
  * @author Lars Lenecke <incode@func0der.de>
@@ -19,18 +19,18 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  */
  	protected $_xmlVersion = '1.0';
 
- /**
-  * Encoding of the sitemap.
-  *
-  * @var string
-  */
+/**
+ * Encoding of the sitemap.
+ *
+ * @var string
+ */
  	protected $_encoding = 'utf-8';
 
- /**
-  * Include xml styling.
-  *
-  * @var boolean
-  */
+/**
+ * Include xml styling.
+ *
+ * @var boolean
+ */
  	protected $_styleSheet = FALSE;
 
 /**
@@ -84,7 +84,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  * Allowed entry nodes.
  *
  * {@link http://www.sitemaps.org/protocol.html#xmlTagDefinitions Definition}
- * Structure: 
+ * Structure:
  *
  *	array(
  *		[NODENAME] => array(
@@ -204,60 +204,60 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  */
 	protected $_parentNodeNames = array();
 
- /**
-  * Change frequency: always
-  *
-  * @const string
-  */
+/**
+ * Change frequency: always
+ *
+ * @const string
+ */
  	const CHANGE_FREQUENCY_ALWAYS = 'always';
 
- /**
-  * Change frequency: hourly
-  *
-  * @const string
-  */
+/**
+ * Change frequency: hourly
+ *
+ * @const string
+ */
  	const CHANGE_FREQUENCY_HOURLY = 'hourly';
 
- /**
-  * Change frequency: daily
-  *
-  * @const string
-  */
+/**
+ * Change frequency: daily
+ *
+ * @const string
+ */
  	const CHANGE_FREQUENCY_DAILY = 'daily';
 
- /**
-  * Change frequency: weekly
-  *
-  * @const string
-  */
+/**
+ * Change frequency: weekly
+ *
+ * @const string
+ */
  	const CHANGE_FREQUENCY_WEEKLY = 'weekly';
 
- /**
-  * Change frequency: montly
-  *
-  * @const string
-  */
+/**
+ * Change frequency: montly
+ *
+ * @const string
+ */
  	const CHANGE_FREQUENCY_MONTHLY = 'monthly';
 
- /**
-  * Change frequency: yearly
-  *
-  * @const string
-  */
+/**
+ * Change frequency: yearly
+ *
+ * @const string
+ */
  	const CHANGE_FREQUENCY_YEARLY = 'yearly';
 
- /**
-  * Change frequency: never
-  *
-  * @const string
-  */
+/**
+ * Change frequency: never
+ *
+ * @const string
+ */
  	const CHANGE_FREQUENCY_NEVER = 'never';
 
- /** 
-  * Allowed change frequencies in a stirng array.
-  *
-  * @var array
-  */
+/**
+ * Allowed change frequencies in a stirng array.
+ *
+ * @var array
+ */
  	protected $_allowedChangeFrequencies = array(
  		'CHANGE_FREQUENCY_ALWAYS',
  		'CHANGE_FREQUENCY_HOURLY',
@@ -268,55 +268,55 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  		'CHANGE_FREQUENCY_NEVER',
  	);
 
- /**
-  * Maximum entries for a sitemap.
-  *
-  * @const int
-  */
+/**
+ * Maximum entries for a sitemap.
+ *
+ * @const int
+ */
  	const MAXIMUM_ENTRIES = 50000;
 
- /**
-  * Maximum filesize for a sitemap in bytes.
-  *
-  * @const int
-  */
+/**
+ * Maximum filesize for a sitemap in bytes.
+ *
+ * @const int
+ */
  	const MAXIMUM_FILESIZE = 10485760;
 
- /**
-  * Datetime format.
-  *
-  * @const int
-  */
+/**
+ * Datetime format.
+ *
+ * @const int
+ */
  	const DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+00:00';
 
- /**
-  * Ping urls.
-  *
-  * @var array
-  */
+/**
+ * Ping urls.
+ *
+ * @var array
+ */
  	protected $pingUrl = array();
 
- /**
-  * Validation trigger.
-  *
-  * @var boolean
-  */
+/**
+ * Validation trigger.
+ *
+ * @var boolean
+ */
  	protected $_useValidation = TRUE;
 
- /**
-  * Content callback trigger.
-  *
-  * @var boolean
-  */
+/**
+ * Content callback trigger.
+ *
+ * @var boolean
+ */
 	protected $_useContentCallbacks = TRUE;
 
- /**
-  * Trigger for debug mode.
-  *
-  *	Enables for example formatted output.
-  *
-  * @var boolean
-  */
+/**
+ * Trigger for debug mode.
+ *
+ *	Enables for example formatted output.
+ *
+ * @var boolean
+ */
  	protected $_debug = false;
 
 
@@ -326,22 +326,22 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  											|
  *******************************************/
 
- /**
-  * Constructor.
-  *
-  * Basically just calls the self::init() method.
-  */
+/**
+ * Constructor.
+ *
+ * Basically just calls the self::init() method.
+ */
  	public function __construct() {
 		if (!class_exists('DOMDocument')) {
 			throw new Exception('DOMDocument is needed to use this class.');
 		}
  	}
 
- /**
-  * Resets the class to start from the beginning with new entries.
-  *
-  * @return SitemapsOrg
-  */
+/**
+ * Resets the class to start from the beginning with new entries.
+ *
+ * @return SitemapsOrg
+ */
  	public function reset() {
  		// Unset the entries holding url.
  		$this->_entries = array();
@@ -417,7 +417,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  * @param array $entry
  *	The entry to progress.
  * @param string $runTimeConfiguration
- *	If filled, this configuration is used instead of 
+ *	If filled, this configuration is used instead of
  *	class configuration. Used for recursion.
  *
  * @return string
@@ -426,164 +426,192 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 	protected function _progressEntryData($entry, $runTimeConfiguration = NULL) {
 		$result = array();
 
-		// Set allowed entry nodes configuration if run time configuration is given.
+		// Set allowed entry nodes configuration if run time configuration is
+		// given.
+		// @TODO: This and the resetting part is kind of yuck.
+		// I should be capsuled into a method with a class property holding the
+		// old allowed entries.
+		// But! it could not be called recursively anymore that way, because
+		// those savings of old values would be overwritten every time.
+		// Is there a even a better solution to this?
 		if (!is_null($runTimeConfiguration)) {
 			$oldAllowedEntryNodes = $this->getAllowedEntryNodes();
 			$this->setAllowedEntryNodes($runTimeConfiguration);
 		}
 
-		// Get allowed entry nodes.
-		$allowedEntryNodes = $this->getAllowedEntryNodes();
+		// To make sure, we are resetting the allowed entries configuration
+		// either on failure or succes, we need to pre-catch the exceptions
+		// here.
+		try {
+			// Get allowed entry nodes.
+			$allowedEntryNodes = $this->getAllowedEntryNodes();
 
-		// Check for missing required data.
-		foreach ($allowedEntryNodes as $node => $configuration) {
-			
-			if (
-				// Configuration is present.
-				isset($configuration['required']) &&
-				$configuration['required'] === TRUE &&
-				// Node is not found in entry data or empty.
-				(!isset($entry[$node]) || empty($entry[$node]))
-			) {
-				throw new SitemapInvalidParameterException('Required node ' . $node . ' is missing in your entry.');
+			// Check for missing required data.
+			foreach ($allowedEntryNodes as $node => $configuration) {
+
+				if (
+					// Configuration is present.
+					isset($configuration['required']) &&
+					$configuration['required'] === TRUE &&
+					// Node is not found in entry data or empty.
+					(!isset($entry[$node]) || empty($entry[$node]))
+				) {
+					throw new SitemapInvalidParameterException('Required node "' . $node . '" is missing in your entry.');
+				}
+			}
+
+			foreach ($entry as $node => $data) {
+				// Check if we have a configuration.
+				if ($this->hasAllowedEntryConfig($node)) {
+					// Add node to parent node names.
+					$this->_addParentNodeName($node);
+
+					$nodeConfiguration = $this->getAllowedEntryConfig($node);
+
+					// Check for children.
+					if (is_array($data)) {
+						// We need to recreated the whole array to catch sub nodes and sub node collections.
+						$sub_node_collections = array();
+						foreach ($data as $index => $data_items) {
+							// If this is a collection of sub nodes it is something like images or videos.
+							// Since XML nodes can not be an integer, this should do it.
+							if (is_int($index)) {
+								$sub_node_collections[$index] = $this->_progressEntryData($data[$index], $nodeConfiguration[self::ALLOWED_ENTRY_CHILDREN_INDEX]);
+								// Unset this index, so we can process $data later on.
+								unset($data[$index]);
+							}
+						}
+
+						// Process left over data, if any.
+						if (!empty($data)) {
+							$data = $this->_progressEntryData($data, $nodeConfiguration[self::ALLOWED_ENTRY_CHILDREN_INDEX]);
+						}
+
+						// Merge data back together.
+						$data = array_merge($sub_node_collections, $data);
+					}
+					// Normal string.
+					else {
+						// Validation.
+						// @TODO: Validation should include the content callbacks somehow.
+						// An idea to this would be, to have two validations. One for the
+						// input data that comes from "the user" and another one, running
+						// after the content callback. This avoids stuff like "<p></p>"
+						// to pass validation, but ultimatively causing an error, because
+						// the node is required and the value is sent through
+						// Sitemap_SitemapsOrg_Google::content_htmlEncodedText() which
+						// simply strips tags and cause an empty result for that value.
+						if ($this->getUseValidation() && isset($nodeConfiguration['validationCallback'])) {
+							$validationCallback = $nodeConfiguration['validationCallback'];
+
+							// Define parameters for validationCallback.
+							$parameters = array(
+								$data,
+							);
+
+							// Check if the given validation callback is an array
+							// with additional parameters to be passed to validation callback.
+							if (count($validationCallback) > 1) {
+								// Get the additional parameters for the validation callback.
+								$additionalParameters = array_splice($validationCallback, 1);
+								// Reset validation callback.
+								$validationCallback = $validationCallback[0];
+								// Merge with already existing parameters.
+								$parameters = array_merge(
+									$parameters,
+									$additionalParameters
+								);
+							}
+
+							$validationResult = $this->_executeCallback(
+								$validationCallback,
+								$parameters,
+								array(
+									'prefix' => 'validation_',
+									'requirePrefixFor' => 'internal',
+								)
+							);
+
+							// If validation failed...
+							if (!$validationResult) {
+								// ...check the fallback value...
+								// A special case for throwing an exception.
+								if ($nodeConfiguration['fallbackValue'] === self::VALIDATION_EXCEPTION) {
+									// Throw exception.
+									throw new SitemapValidationException('Invalid value for node "' . $node . '"');
+								}
+								else {
+									// Use fallback value as is.
+									$data = $nodeConfiguration['fallbackValue'];
+								}
+							}
+						}
+
+						// Manipulate content.
+						if ($this->getUseContentCallbacks() && isset($nodeConfiguration['contentCallback'])) {
+							$contentCallback = $nodeConfiguration['contentCallback'];
+
+							// Define parameters for contentCallback.
+							$parameters = array(
+								$data,
+							);
+
+							// Check if the given validation callback is an array
+							// with additional parameters to be passed to validation callback.
+							if (count($contentCallback) > 1) {
+								// Get the additional parameters for the validation callback.
+								$additionalParameters = array_splice($contentCallback, 1);
+								// Reset content callback.
+								$contentCallback = $contentCallback[0];
+								// Merge with already existing parameters.
+								$parameters = array_merge(
+									$parameters,
+									$additionalParameters
+								);
+							}
+
+							$data = $this->_executeCallback(
+								$contentCallback,
+								$parameters,
+								array(
+									'prefix' => 'content_',
+									'requirePrefixFor' => 'internal',
+								)
+							);
+						}
+
+						// Check if content should be wrapped in cData or
+						// should just be escaped for XML.
+						if (isset($nodeConfiguration['cData']) && $nodeConfiguration['cData'] === TRUE) {
+							$data = new DOMCdataSection($data);
+						}
+						else {
+							$data = $this->content_encodedText($data);
+						}
+					}
+
+					// Generate node name.
+					$nodeName = $this->_generateNodeName($node, $nodeConfiguration);
+
+					// Save the result.
+					$result[$nodeName] = $data;
+
+					// Remove last entry from last parent nodes.
+					$this->_removeLastParentNodeName();
+				}
 			}
 		}
-
-		foreach ($entry as $node => $data) {
-			// Check if we have a configuration.
-			if ($this->hasAllowedEntryConfig($node)) {
-				// Add node to parent node names.
-				$this->_addParentNodeName($node);
-
-				$nodeConfiguration = $this->getAllowedEntryConfig($node);
-
-				// Check for children.
-				if (is_array($data)) {
-					// We need to recreated the whole array to catch sub nodes and sub node collections.
-					$sub_node_collections = array();
-					foreach ($data as $index => $data_items) {
-						// If this is a collection of sub nodes it is something like images or videos.
-						// Since XML nodes can not be an integer, this should do it.
-						if (is_int($index)) {
-							$sub_node_collections[$index] = $this->_progressEntryData($data[$index], $nodeConfiguration[self::ALLOWED_ENTRY_CHILDREN_INDEX]);
-							// Unset this index, so we can process $data later on.
-							unset($data[$index]);
-						}
-					}
-
-					// Process left over data, if any.
-					if (!empty($data)) {
-						$data = $this->_progressEntryData($data, $nodeConfiguration[self::ALLOWED_ENTRY_CHILDREN_INDEX]);
-					}
-
-					// Merge data back together.
-					$data = array_merge($sub_node_collections, $data);
-				}
-				// Normal string.
-				else {
-					// Validation.
-					if ($this->getUseValidation() && isset($nodeConfiguration['validationCallback'])) {
-						$validationCallback = $nodeConfiguration['validationCallback'];
-
-						// Define parameters for validationCallback.
-						$parameters = array(
-							$data,
-						);
-
-						// Check if the given validation callback is an array
-						// with additional parameters to be passed to validation callback.
-						if (count($validationCallback) > 1) {
-							// Get the additional parameters for the validation callback.
-							$additionalParameters = array_splice($validationCallback, 1);
-							// Reset validation callback.
-							$validationCallback = $validationCallback[0];
-							// Merge with already existing parameters.
-							$parameters = array_merge(
-								$parameters,
-								$additionalParameters
-							);
-						}
-
-						$validationResult = $this->_executeCallback(
-							$validationCallback,
-							$parameters,
-							array(
-								'prefix' => 'validation_',
-								'requirePrefixFor' => 'internal',
-							)
-						);
-
-						// If validation failed...
-						if (!$validationResult) {
-							// ...check the fallback value...
-							// A special case for throwing an exception.
-							if ($nodeConfiguration['fallbackValue'] === self::VALIDATION_EXCEPTION) {
-								// Throw exception.
-								throw new SitemapValidationException('Invalid value for node "' . $node . '"');
-							}
-							else {
-								// Use fallback value as is.
-								$data = $nodeConfiguration['fallbackValue'];
-							}
-						}
-					}
-
-					// Manipulate content.
-					if ($this->getUseContentCallbacks() && isset($nodeConfiguration['contentCallback'])) {
-						$contentCallback = $nodeConfiguration['contentCallback'];
-
-						// Define parameters for contentCallback.
-						$parameters = array(
-							$data,
-						);
-
-						// Check if the given validation callback is an array
-						// with additional parameters to be passed to validation callback.
-						if (count($contentCallback) > 1) {
-							// Get the additional parameters for the validation callback.
-							$additionalParameters = array_splice($contentCallback, 1);
-							// Reset content callback.
-							$contentCallback = $contentCallback[0];
-							// Merge with already existing parameters.
-							$parameters = array_merge(
-								$parameters,
-								$additionalParameters
-							);
-						}
-
-						$data = $this->_executeCallback(
-							$contentCallback,
-							$parameters,
-							array(
-								'prefix' => 'content_',
-								'requirePrefixFor' => 'internal',
-							)
-						);
-					}
-
-					// Check if content should be wrapped in cData or
-					// should just be escaped for XML.
-					if (isset($nodeConfiguration['cData']) && $nodeConfiguration['cData'] === TRUE) {
-						$data = new DOMCdataSection($data);
-					}
-					else {
-						$data = $this->content_encodedText($data);
-					}
-				}
-
-				// Generate node name.
-				$nodeName = $this->_generateNodeName($node, $nodeConfiguration);
-
-				// Save the result.
-				$result[$nodeName] = $data;
-
-				// Remove last entry from last parent nodes.
-				$this->_removeLastParentNodeName();
+		catch (Exception $e) {
+			// Reset allowed entry configuration.
+			if (isset($oldAllowedEntryNodes)) {
+				$this->setAllowedEntryNodes($oldAllowedEntryNodes);
 			}
+
+			throw $e;
 		}
 
 		// Reset allowed entry configuration.
-		if (!is_null($runTimeConfiguration) && isset($oldAllowedEntryNodes)) {
+		if (isset($oldAllowedEntryNodes)) {
 			$this->setAllowedEntryNodes($oldAllowedEntryNodes);
 		}
 
@@ -602,7 +630,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
  * @param array $options
  *	Options for the callback.
  *	Allowed options:
- *		'prefix'			=>	If a prefix is needed for the 
+ *		'prefix'			=>	If a prefix is needed for the
  *								callback function/method.
  *		'requirePrefixFor'	=>	For what functions/methods
  *								should the prefix be required.
@@ -641,7 +669,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			$options['requirePrefixFor'] == 'both' &&
 			strpos($function, $options['prefix']) !== 0
 		) {
-			throw new SitemapInvalidCallbackException('The prefix ' . $options['prefix'] . ' is missing in the callback.');
+			throw new SitemapInvalidCallbackException('The prefix "' . $options['prefix'] . '" is missing in the callback.');
 		}
 
 		// Quick access to prefix combinations.
@@ -653,11 +681,11 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 					$requireInternalPrefix = true;
 					$requireExternalPrefix = true;
 					break;
-					
+
 				case 'internal':
 					$requireInternalPrefix = true;
 					break;
-					
+
 				case 'external':
 					$requireExternalPrefix = true;
 					break;
@@ -1076,7 +1104,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 
 		// Set url for call.
 		curl_setopt($c, CURLOPT_URL, $url);
-		
+
 		// Execute curl call.
 		$success = curl_exec($ch);
 
@@ -1113,7 +1141,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		$port = 80;
 		$timeout = 10;
 		$fso = fsockopen($url['host'], $port, $errno, $errstr, $timeout);
-		
+
 		// Proceed if connection was successfully opened.
 		if ($fso) {
 			// Create headers.
@@ -1124,14 +1152,14 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 
 			// Write headers to socket.
 			fwrite($fso, $headers);
-		
+
 			// Set timeout for stream read/write.
 			stream_set_timeout($fso, $timeout);
 
 			// Use a loop in case something unexpected happens.
-			// I do not know what, but that why it is unexpected.			
+			// I do not know what, but that why it is unexpected.
 			while (!feof($fso)){
-				// 128 bytes is getting use the header with the http response code in it.				
+				// 128 bytes is getting use the header with the http response code in it.
 				$buffer = fread($fso, 128);
 
 				// Filter only the http status line (first line) and break loop on success.
@@ -1347,7 +1375,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		return $result;
 
 		// @XXX:	This part is currently not in use, because
-		// 			filter_var() would not let urls with e.g. 'ä' pass. 
+		// 			filter_var() would not let urls with e.g. 'ä' pass.
 		// 			So if the urls do not come valid in here, they will not
 		//			come in here.
 		//			Suggestions appreciated.
@@ -1482,7 +1510,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 		$result = new DateTime(
 			$result
 		);
-		
+
 		$result = $result->format(DateTime::W3C);
 		/*
 		} // Belongs to commented if conditional above.
@@ -1766,7 +1794,7 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 			if (is_null($deepestCommonLevel)) {
 				$deepestCommonLevel = &$deepestLayer;
 			}
-			$deepestLayer = $config;			
+			$deepestLayer = $config;
 
 			$deepestExistingLayer = array_merge(
 				$deepestExistingLayer,
@@ -1834,14 +1862,14 @@ class Sitemap_SitemapsOrg implements SitemapInterface {
 				foreach ($entryNodeName as $nodeName) {
 					// Root level. Only on first run.
 					if ($firstRun && isset($result[$nodeName])) {
-						$result = $result[$nodeName];	
+						$result = $result[$nodeName];
 					}
 					elseif(
 						isset($result[self::ALLOWED_ENTRY_CHILDREN_INDEX]) &&
 						isset($result[self::ALLOWED_ENTRY_CHILDREN_INDEX][$nodeName])
 					) {
 						$result = $result[self::ALLOWED_ENTRY_CHILDREN_INDEX][$nodeName];
-					}					
+					}
 
 					// Set first run indicator to FALSE.
 					// An additional IF would just blow this up.
